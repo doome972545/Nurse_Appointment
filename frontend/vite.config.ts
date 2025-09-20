@@ -11,4 +11,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: "dist",
+  },
+  server: {
+    port: 5173, // หรือ port ที่คุณอยากใช้
+  },
+  preview: {
+    port: 4173,
+  },
 });
