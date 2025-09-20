@@ -4,6 +4,7 @@ import type { AppRoute } from "@/type/types";
 import DynamicHome from "@/components/DynamicHome";
 import CheckShiftSchedule from "@/views/CheckShiftSchedule/CheckShiftSchedule";
 import ViewLeave from "@/views/ViewLeave/ViewLeave";
+import Register from "@/views/Register";
 
 export const routes = (_userRole: string): AppRoute[] => [
   {
@@ -49,6 +50,12 @@ export const routes = (_userRole: string): AppRoute[] => [
     path: "/login",
     name: "Login",
     component: Login,
+    meta: { requireAuth: false },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
     meta: { requireAuth: false },
   },
 ];

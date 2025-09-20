@@ -1,5 +1,14 @@
 import { type ColumnDef } from "@tanstack/react-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { approveRequestLeave } from "@/api/leave-request";
 export type LeaveRequestData = {
   id: number;
   shiftAssignment_id: number;
@@ -13,7 +22,12 @@ export type LeaveRequestData = {
     email: string;
     role: "NURSE" | "HEAD_NURSE";
   };
-  approve: any | null;
+  approve: {
+    id: string;
+    name: string;
+    email: string;
+    role: "HEAD_NURSE";
+  };
   shiftAssignment: {
     shift: {
       id: number;
@@ -23,6 +37,15 @@ export type LeaveRequestData = {
     };
   };
 };
+
+async function actionRequest(id: number, type: string) {
+  try {
+    await approveRequestLeave(id, type);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const columnsViewLeave: ColumnDef<LeaveRequestData>[] = [
   {
     accessorKey: "nurse.name",
@@ -60,7 +83,7 @@ export const columnsViewLeave: ColumnDef<LeaveRequestData>[] = [
   {
     accessorKey: "approve_by",
     header: "ผู้อนุมัติ",
-    cell: ({ row }) => row.original.approve_by ?? "-",
+    cell: ({ row }) => row.original.approve?.name ?? "-",
   },
   {
     accessorKey: "status",
@@ -68,37 +91,75 @@ export const columnsViewLeave: ColumnDef<LeaveRequestData>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       let variant: "default" | "destructive" | "outline" = "default";
-      let text = "";
+      let customClass = "";
+      let customStatus = "";
 
       switch (status) {
         case "APPROVED":
-          variant = "default";
-          text = "อนุมัติ";
+          variant = "default"; // ใช้สีเขียวของ Badge
+          customClass = "text-green-800 bg-green-100 border-green-300";
+          customStatus = "อนุมัติ";
           break;
         case "PENDING":
-          variant = "outline";
-          text = "รออนุมัติ";
+          variant = "outline"; // ใช้ outline เป็นสีเหลืองแทน
+          customClass = "text-yellow-800 bg-yellow-100 border-yellow-300";
+          customStatus = "รออนุมัติ";
           break;
         case "REJECTED":
-          variant = "destructive";
-          text = "ไม่อนุมัติ";
+          variant = "destructive"; // สีแดง
+          customStatus = "ไม่อนุมัติ";
           break;
       }
 
-      return <Badge variant={variant}>{text}</Badge>;
+      return (
+        <Badge variant={variant} className={customClass}>
+          {customStatus}
+        </Badge>
+      );
     },
   },
   {
     accessorKey: "action",
-    header: "Action",
+    header: () => (
+      <div className="px-4 py-2 text-right font-bold text-muted-foreground">
+        จัดการ
+      </div>
+    ),
     cell: ({ row }) => {
+      const id = row.original.id;
+      const approve = row.original.approve;
       return (
-        <button
-          className="px-2 py-1 bg-blue-500 text-white rounded"
-          onClick={() => console.log("Action", row.original.id)}
-        >
-          ขอลา
-        </button>
+        <>
+          {approve ? (
+            ""
+          ) : (
+            <div className="flex justify-end ">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="p-0 px-1">ตัวเลือก</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>การการอนุมัติลา</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      onClick={() => actionRequest(id, "approve")}
+                      className="bg-green-100 text-black border border-green-600 hover:bg-green-600 hover:text-white"
+                    >
+                      อนุมัติ
+                    </Button>
+                    <Button
+                      onClick={() => actionRequest(id, "reject")}
+                      className=" bg-red-100 text-black border border-red-600 hover:bg-red-600 hover:text-white"
+                    >
+                      ปฏิเสธ
+                    </Button>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+        </>
       );
     },
   },

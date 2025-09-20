@@ -3,12 +3,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { loginUser } from "@/api/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/slice/AuthSlice";
+import Loading from "@/components/Loading";
+import type { RootState } from "@/store";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("nurse@gmail.com");
-  const [password, setPassword] = useState("pass123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const loading = useSelector((state: RootState) => state.app.loading);
+  const navigate = useNavigate(); // <-- hook สำหรับเปลี่ยนหน้า
 
   const dispatch = useDispatch();
   const handleLogin = async (e: React.FormEvent) => {
@@ -31,7 +36,8 @@ const Login = () => {
 
   return (
     <div>
-      <div className="h-screen flex justify-center items-center bg-background">
+      <Loading open={loading} fullscreen />
+      <div className="h-screen flex flex-col gap-3 justify-center items-center bg-background">
         <div className="rounded-xl border bg-card text-card-foreground shadow p-6 min-w-[24rem]">
           <div className="flex justify-center mb-4">
             <h1 className="text-2xl font-semibold">เข้าสู่ระบบ</h1>
@@ -61,6 +67,19 @@ const Login = () => {
               ลงชื่อเข้าใช้
             </Button>
           </form>
+          <div className="flex justify-end">
+            <Button variant="link" onClick={() => navigate("/register")}>
+              ลงทะเบียน
+            </Button>
+          </div>
+        </div>
+        <div className="rounded-xl border bg-card text-card-foreground shadow p-6 min-w-[24rem]">
+          <h2 className="font-semibold">Admin: admin@gmail.com</h2>
+          <h2 className="font-semibold">Nurse1: nurse1@gmail.com</h2>
+          <h2 className="font-semibold">Nurse2: nurse2@gmail.com</h2>
+          <h2 className="font-semibold">Nurse3: nurse3@gmail.com</h2>
+
+          <h5 className="text-sm">Password: pass123</h5>
         </div>
       </div>
     </div>

@@ -9,13 +9,19 @@ import { Separator } from "@/components/ui/separator";
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
+import Loading from "@/components/Loading";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store";
 
 const MainLayout = () => {
+  const loading = useSelector((state: RootState) => state.app.loading);
+
   return (
     <SidebarProvider>
       <AppSidebar />
 
       <SidebarInset>
+        <Loading open={loading} fullscreen />
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator

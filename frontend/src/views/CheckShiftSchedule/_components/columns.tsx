@@ -144,7 +144,9 @@ export const columns: ColumnDef<ShiftData>[] = [
               <DropdownMenuLabel>การทำงาน</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DialogDetail shift={row.original} />
-              {leave?.status !== "APPROVED" && leave?.status !== "PENDING" ? (
+              {leave?.status !== "APPROVED" &&
+              leave?.status !== "PENDING" &&
+              leave?.status !== "REJECTED" ? (
                 <DialogRequest shift={row.original} />
               ) : null}
             </DropdownMenuContent>

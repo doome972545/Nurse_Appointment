@@ -55,6 +55,14 @@ const AuthMiddleware: React.FC<AuthMiddlewareProps> = ({
       return <Navigate to="/duty_schedule" replace />;
     }
   }
+  if (location.pathname === "/register" && isAuthenticated) {
+    if (user?.role === "HEAD_NURSE") {
+      return <Navigate to="/" replace />;
+    }
+    if (user?.role === "NURSE") {
+      return <Navigate to="/duty_schedule" replace />;
+    }
+  }
 
   // ถ้าเป็นหน้า login และไม่ต้อง authentication ให้แสดงหน้า login ปกติ
   if (location.pathname === "/login" && !requireAuth) {

@@ -11,10 +11,10 @@ const app = express();
 const port = 3000;
 app.use(
   cors({
-    origin: "*", // URL ของ React dev server
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true, // ถ้าใช้ cookies
-    exposedHeaders: ["Authorization"], // ✅ ต้องใส่ตรงนี้
+    origin: "*", // หรือใส่ ["http://localhost:5173"] ให้เฉพาะ origin ได้
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
+    exposedHeaders: ["Authorization"],
   })
 );
 app.use(express.json());

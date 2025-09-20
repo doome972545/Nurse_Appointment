@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import { Calendar02 } from "./_components/Calendar";
 
 const Shift = () => {

@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { columnsViewLeave, type LeaveRequestData } from "./_components/columns";
 import { DataTable } from "./_components/dataTableViewLeave";
 import { getAllLeaveRequest } from "@/api/leave-request";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/store";
+import { isReload } from "@/slice/AppSlice";
 
 export default function ViewLeave() {
   const [data, setData] = useState<LeaveRequestData[]>([]);
-
+  const reload = useSelector((state: RootState) => state.app.reload);
+  const dispatch = useDispatch();
   //   async function getData(): Promise<LeaveRequestData[]> {
   //     // Fetch data from your API here.
   //     return [
@@ -132,14 +136,18 @@ export default function ViewLeave() {
     try {
       const fecthAll = await getAllLeaveRequest();
       setData(fecthAll);
+      console.log(fecthAll);
     } catch (error) {
       console.log(error);
     }
   }
   useEffect(() => {
     fetchAllLeaveRequest();
-    // getData().then(setData);
   }, []);
+  useEffect(() => {
+    fetchAllLeaveRequest();
+    dispatch(isReload(false));
+  }, [reload]);
 
   return (
     <div className="container mx-auto py-10">
