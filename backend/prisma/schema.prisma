@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Users {
+  id       String             @id @default(uuid())
+  name     String
+  email    String             @unique
+  password String
+  role     Role
+  shiftAssignments Shift_Assignment[]
+  nurseLeaves      Leave_Request[]    @relation("NurseLeaveRequests")  // Leave requests ของ nurse
+  approvedLeaves   Leave_Request[]    @relation("ApprovedLeaves")      // Leave requests ที่ user อนุมัติ
+}
+
+model Shift {
+  id        Int             @id @default(autoincrement())
+  date      DateTime
+  start_time String
+  end_time   String
+  shiftAssignments Shift_Assignment[]
+}
+
+model Shift_Assignment {
+  id       Int   @id @default(autoincrement())
+  user     Users    @relation(fields: [user_id], references: [id])
+  user_id   String
+  shift    Shift    @relation(fields: [shift_id], references: [id])
+  shift_id  Int
+  leaveRequests Leave_Request[]
+}
+
+model Leave_Request {
+  id                 Int               @id @default(autoincrement())
+  shiftAssignment    Shift_Assignment  @relation(fields: [shiftAssignment_id], references: [id])
+  shiftAssignment_id Int             // match type ของ Shift_Assignment.id
+  nurse              Users             @relation("NurseLeaveRequests", fields: [nurse_id], references: [id])
+  nurse_id           String
+  reason             String?
+  status             LeaveStatus?
+  approve_by          String?            
+  approve            Users?             @relation("ApprovedLeaves", fields: [approve_by], references: [id])
+
+  @@map("leave_request")
+}
+
+enum Role {.
+  NURSE
+  HEAD_NURSE
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

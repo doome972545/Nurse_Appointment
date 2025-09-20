@@ -1,0 +1,14 @@
+export const HOST_BASE = import.meta.env.VITE_URL_API;
+export const LOGIN = `${HOST_BASE}/auth/login`;
+export const GET_ALL_SHIFT = `${HOST_BASE}/shift`;
+export const ADD_SHIFT = `${HOST_BASE}/shift`;
+export const GET_NURSE_SHIFT = `${HOST_BASE}/shift/`;
+export const ALL_NURSE = `${HOST_BASE}/auth/users`;
+export const SHIFT_ASSIGNMENT = `${HOST_BASE}/shift-assignments`;
+export const GET_SHIFT_NURSE = `${HOST_BASE}/nurse/shift`;
+export const LEAVE_REQUEST = `${HOST_BASE}/leave-requests`;
+export const GET_ALL_LEAVE_REQUEST = `${HOST_BASE}/leave-requests`;
+// export const REGISTER = `${HOST_BASE}/user/register`;
+// export const UPDATE_USER = `${HOST_BASE}/user`;
+// export const GET_ALL_USER = `${HOST_BASE}/user`;
+// export const DELETE_USER = `${HOST_BASE}/user`;
